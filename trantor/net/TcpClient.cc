@@ -66,6 +66,7 @@ TcpClient::TcpClient(EventLoop *loop,
       messageCallback_(defaultMessageCallback),
       retry_(false),
       connect_(true)
+
 {
     (void)validateCert_;
     LOG_TRACE << "TcpClient::TcpClient[" << name_ << "] - connector ";
@@ -139,42 +140,21 @@ void TcpClient::stop()
 
 void TcpClient::startUserInput(const TcpConnectionPtr &conn)
 {
-    //void (TcpClient::*func)(const TcpConnectionPtr &conn);
     auto func = std::bind(&TcpClient::UserInput, this, std::placeholders::_1);
-    //func = std::bind(&TcpClient::UserInput, this, std::placeholders::_1);
 
     if(t1.joinable())
     {
         t1.join();
     }
     t1 = std::thread(func, conn);
-    //std::thread t1(func, conn);
-    /*
-    std::thread inputThread([conn]()
-    {
-        TcpClient::User u1;
-        std::string userInput;
-        while(userInput != "/quit")
-        {
-            std::cout << u1.username << ": ";
-            std::getline(std::cin, userInput);
-            if(!userInput.empty())
-            {
-                conn->send(userInput);
-            }
-        }
-        this->disconnect();
-    });
-    */
 }
 
 void TcpClient::UserInput(const TcpConnectionPtr &conn)
 {
-    TcpClient::User u1;
     std::string userInput;
     while(userInput != "/quit")
     {
-        std::cout << u1.username << ": ";
+        std::cout << this->m_user.username << ": ";
         std::getline(std::cin, userInput);
         if(!userInput.empty())
         {
@@ -183,6 +163,8 @@ void TcpClient::UserInput(const TcpConnectionPtr &conn)
     }
     this->disconnect();
     this->t1.detach();
+    conn->shutdown();
+    std::exit(0);
 }
 void TcpClient::setSockOptCallback(SockOptCallback &&cb)
 {
