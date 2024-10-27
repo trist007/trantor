@@ -140,13 +140,16 @@ void TcpClient::stop()
 
 void TcpClient::startUserInput(const TcpConnectionPtr &conn)
 {
-    auto func = std::bind(&TcpClient::UserInput, this, std::placeholders::_1);
+    auto func = std::bind(&TcpClient::UserInput, this, _1);
+
+    t1 = std::thread(func, conn);
 
     if(t1.joinable())
     {
         t1.join();
     }
-    t1 = std::thread(func, conn);
+    conn->shutdown();
+    std::exit(0);
 }
 
 void TcpClient::UserInput(const TcpConnectionPtr &conn)
@@ -162,9 +165,7 @@ void TcpClient::UserInput(const TcpConnectionPtr &conn)
         }
     }
     this->disconnect();
-    this->t1.detach();
-    conn->shutdown();
-    std::exit(0);
+    //this->t1.detach();
 }
 void TcpClient::setSockOptCallback(SockOptCallback &&cb)
 {
