@@ -66,6 +66,12 @@ class TRANTOR_EXPORT TcpServer : NonCopyable
     void stop();
 
     /**
+     * @brief Parse Input from the clients
+     *
+     */
+    void ParseData(std::string input);
+
+    /**
      * @brief Set the number of event loops in which the I/O of connections to
      * the server is handled.
      * An EventLoopThreadPool is created and managed by TcpServer.

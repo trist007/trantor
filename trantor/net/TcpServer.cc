@@ -47,6 +47,9 @@ TcpServer::~TcpServer()
     LOG_TRACE << "TcpServer::~TcpServer [" << serverName_ << "] destructing";
 }
 
+void ParseData()
+{}
+
 void TcpServer::setBeforeListenSockOptCallback(SockOptCallback cb)
 {
     acceptorPtr_->setBeforeListenSockOptCallback(std::move(cb));
