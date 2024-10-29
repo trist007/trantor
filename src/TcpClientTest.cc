@@ -60,6 +60,7 @@ int main()
             std::string tmp = client->m_user.username;
             tmp += " connected\n";
             conn->send(tmp);
+            client->startUserInput(conn);
             }
             else
             {

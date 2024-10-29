@@ -145,12 +145,13 @@ void TcpClient::startUserInput(const TcpConnectionPtr &conn)
     if(t1.joinable())
     {
         t1.join();
-    }
+    }        
     t1 = std::thread(func, conn);
 }
 
 void TcpClient::UserInput(const TcpConnectionPtr &conn)
 {
+    //TcpConnectionPtr conn = this->connection();
     std::string userInput;
     while(userInput != "/quit")
     {
@@ -162,7 +163,6 @@ void TcpClient::UserInput(const TcpConnectionPtr &conn)
         }
     }
     this->disconnect();
-    this->t1.detach();
     conn->shutdown();
     std::exit(0);
 }
@@ -228,7 +228,6 @@ void TcpClient::newConnection(int sockfd)
             self->sslErrorCallback_(err);
     });
     conn->connectEstablished();
-    startUserInput(connection_);
 }
 
 void TcpClient::removeConnection(const TcpConnectionPtr &conn)
