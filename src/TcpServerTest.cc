@@ -28,7 +28,8 @@ int main()
             std::string input;
             LOG_DEBUG<<"recv callback!";
             input = std::string(buffer->peek(), buffer->readableBytes());
-            std::cout << "input = " << input << std::endl;
+            server->ParseInput(input);
+            std::cout << input << std::endl;
             connectionPtr->send(buffer->peek(), buffer->readableBytes());
             buffer->retrieveAll();
             // connectionPtr->forceClose();

@@ -170,7 +170,7 @@ void TcpClient::ParseInput(std::string input)
         }
         else
         {
-            std::cout << "token = " << token << std::endl;
+            //std::cout << token << std::endl;
         }
     }
     else
@@ -180,10 +180,10 @@ void TcpClient::ParseInput(std::string input)
 
 }
 
-void TcpClient::startUserInput()
+void TcpClient::startUserInput(const TcpConnectionPtr &conn)
 {
-    auto func = std::bind(&TcpClient::UserInput, this);
-    t1 = std::thread(func);
+    auto func = std::bind(&TcpClient::UserInput, this, _1);
+    //t1 = std::thread(func);
 
     if(t1.joinable())
     {
@@ -192,15 +192,15 @@ void TcpClient::startUserInput()
     t1 = std::thread(func, conn);
 }
 
-void TcpClient::UserInput()
+void TcpClient::UserInput(const TcpConnectionPtr &conn)
 {
     //TcpConnectionPtr conn = this->connection();
     std::string userInput;
 
 
-    std::cerr << "getting connection\n" << std::endl;
-    const TcpConnectionPtr conn = connection();
-    std::lock_guard<std::mutex> lock(this->mutex_);
+    //std::cerr << "getting connection\n" << std::endl;
+    //const TcpConnectionPtr conn = connection();
+    //std::lock_guard<std::mutex> lock(this->mutex_);
 
     if(!conn || !conn->connected())
     {
