@@ -16,6 +16,7 @@
 #include <trantor/utils/Logger.h>
 #include <functional>
 #include <vector>
+#include <sstream>
 #include "Acceptor.h"
 #include "inner/TcpConnectionImpl.h"
 using namespace trantor;
@@ -47,8 +48,37 @@ TcpServer::~TcpServer()
     LOG_TRACE << "TcpServer::~TcpServer [" << serverName_ << "] destructing";
 }
 
-void ParseData()
-{}
+void TcpServer::ChangeNick(std::string nick)
+{
+    std::cout << "nick has been updated to " << nick << std::endl;  
+}
+
+void TcpServer::ParseInput(std::string input)
+{
+    std::string token;
+    std::stringstream stream(input);
+
+    if(!input.empty())
+    {
+        stream >> token;
+
+        if(token == "/nick")
+        {
+            std::cout << "token 1 = " << token << std::endl;
+            stream >> token;
+            std::cout << "token 2 = " << token << std::endl;
+            if(token != "/nick")
+            {
+               ChangeNick(token);
+            }
+        }
+    }
+    else
+    {
+        std::cerr << "ParseInput: input parameter is null" << std::endl;
+    }
+
+}
 
 void TcpServer::setBeforeListenSockOptCallback(SockOptCallback cb)
 {

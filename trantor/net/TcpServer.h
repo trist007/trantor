@@ -66,10 +66,16 @@ class TRANTOR_EXPORT TcpServer : NonCopyable
     void stop();
 
     /**
+     * @brief Change Nick
+     *
+     */
+    void ChangeNick(std::string nick);
+
+    /**
      * @brief Parse Input from the clients
      *
      */
-    void ParseData(std::string input);
+    void ParseInput(std::string input);
 
     /**
      * @brief Set the number of event loops in which the I/O of connections to

@@ -24,11 +24,11 @@ int main()
         std::cout << "afterAcceptSockOptCallback:" << fd << std::endl;
     });
     server.setRecvMessageCallback(
-        [](const TcpConnectionPtr &connectionPtr, MsgBuffer *buffer) {
+        [&server](const TcpConnectionPtr &connectionPtr, MsgBuffer *buffer) {
             std::string input;
             LOG_DEBUG<<"recv callback!";
             input = std::string(buffer->peek(), buffer->readableBytes());
-            server->ParseInput(input);
+            server.ParseInput(input);
             std::cout << input << std::endl;
             connectionPtr->send(buffer->peek(), buffer->readableBytes());
             buffer->retrieveAll();
