@@ -66,6 +66,32 @@ class TRANTOR_EXPORT TcpServer : NonCopyable
     void stop();
 
     /**
+     * @brief Struct for Users
+     *
+     */
+    struct User
+    {
+        User(const std::string &user) :
+            username(user) {}
+        User() :
+              username("anonymous") {}
+        TcpConnectionPtr tcp_ptr;
+        std::string username;
+    } m_user;
+
+    /**
+     * @brief Add user
+     *
+     */
+    void AddUser(TcpConnectionPtr tcp, std::string user);
+
+    /**
+     * @brief Array to hold User info
+     *
+     */
+    std::array<Struct User, max_conn> users;
+
+    /**
      * @brief Change Nick
      *
      */
@@ -284,6 +310,7 @@ class TRANTOR_EXPORT TcpServer : NonCopyable
     void handleCloseInLoop(const TcpConnectionPtr &connectionPtr);
     void newConnection(int fd, const InetAddress &peer);
     void connectionClosed(const TcpConnectionPtr &connectionPtr);
+    int max_conn;
 
     EventLoop *loop_;
     std::unique_ptr<Acceptor> acceptorPtr_;

@@ -38,6 +38,7 @@ int main()
         if (connPtr->connected())
         {
             LOG_DEBUG << "New connection";
+            server.AddUser(connPtr);
         }
         else if (connPtr->disconnected())
         {

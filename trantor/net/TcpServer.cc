@@ -48,6 +48,12 @@ TcpServer::~TcpServer()
     LOG_TRACE << "TcpServer::~TcpServer [" << serverName_ << "] destructing";
 }
 
+
+void AddUser(TcpConnectionPtr tcp, std::string user)
+{
+
+}
+
 void TcpServer::ChangeNick(std::string nick)
 {
     std::cout << "nick has been updated to " << nick << std::endl;  
