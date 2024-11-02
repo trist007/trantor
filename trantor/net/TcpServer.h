@@ -26,6 +26,8 @@
 #include <set>
 #include <string>
 
+#define MAX_CONNECTIONS 10
+
 namespace trantor
 {
 class Acceptor;
@@ -64,6 +66,64 @@ class TRANTOR_EXPORT TcpServer : NonCopyable
      *
      */
     void stop();
+
+    /**
+     * @brief max connections
+     *
+     */
+
+    int m_max_conn;
+
+    /**
+     * @brief Struct for Users
+     *
+     */
+    struct User
+    {
+        User(const std::string &user) :
+            tcp_ptr(nullptr),
+            username(user),
+            connected(false) {}
+            
+        User() :
+            tcp_ptr(nullptr),
+            username{"anon"}, 
+            connected(false) {}
+
+        TcpConnectionPtr tcp_ptr;
+        std::string username;
+        bool connected;
+    } user;
+
+    /**
+     * @brief Array to hold User info
+     *
+     */
+    std::array<User, MAX_CONNECTIONS> m_user_array;
+
+    /**
+     * @brief Add user
+     *
+     */
+    void AddUser(const TcpConnectionPtr &tcp);
+
+    /**
+     * @brief Find user in struct User
+     *
+     */
+    User* FindUser(const TcpConnectionPtr &tcp);
+
+    /**
+     * @brief Change Nick
+     *
+     */
+    void ChangeNick(const TcpConnectionPtr &tcp, std::string& nick);
+
+    /**
+     * @brief Parse Input from the clients
+     *
+     */
+    const std::string ParseInput(const TcpConnectionPtr &ptr, const std::string& input);
 
     /**
      * @brief Set the number of event loops in which the I/O of connections to
@@ -259,6 +319,14 @@ class TRANTOR_EXPORT TcpServer : NonCopyable
         policyPtr_ = std::move(policy);
         sslContextPtr_ = newSSLContext(*policyPtr_, true);
     }
+
+    /**
+     * @brief Reload the SSL context.
+     * @note Call this function when the certificate or private key is updated.
+     * The server will reload the SSL context and use the new certificate and
+     * private key. new connections will use the new SSL context.
+     */
+    void reloadSSL();
 
   private:
     void handleCloseInLoop(const TcpConnectionPtr &connectionPtr);
